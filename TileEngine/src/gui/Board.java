@@ -216,7 +216,7 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 
 	public void PlayGame(Graphics2D g2d) {
 		newPlayer.draw(g2d, this, newMap.getMap());
-		drawSun(g2d);
+		//drawSun(g2d);
 		// drawStats(g2d);
 		g2d.dispose();
 	}
