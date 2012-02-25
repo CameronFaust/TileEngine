@@ -1,7 +1,5 @@
 package entities;
 
-import enums.BeingCollision;
-import gui.NewMap;
 import interfaces.Constants;
 import interfaces.PlayerImages;
 import java.awt.Graphics2D;
