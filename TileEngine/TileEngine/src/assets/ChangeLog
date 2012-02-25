@@ -1,0 +1,62 @@
+----REVISIONS FOR 12/19/2011----
+Did various documenting.
+ADDED:
+     Generated Javadocs
+     A getter method for player
+     Player is no longer able to continuously jump.
+     Added an animated sun.
+CHANGED:
+     Renamed Character class to Being to avoid confusion/complications with the char class.
+     Made the Frame non-resizable. [Commented out for testing purposed [12-19-11 C.F]
+     Made it so the g2d and g objects in the paint method are disposed of when finished.
+NOTES:
+     Make it so the player can not enter a 1 x 1 space while carrying a block.
+----Cameron Faust----
+
+----REVISIONS FOR 12/19/2011 - Part II----
+ADDED:
+CHANGED:
+     Fixed transparencies on the Beings .png's
+NOTES:
+----Cameron Faust----
+
+----REVISIONS FOR 12-20-2011----
+ADDED:
+     Arcing sun now works but is still very buggy.
+     Started a Block class. Not yet implemented.
+CHANGED:
+NOTES:
+IDEAS:
+     When holding block give option to:
+          1. Destroy it.
+          2. Store it in inventory.
+          3. Set it back down.
+----Cameron Faust----
+
+----REVISIONS FOR 12-21-2011----
+ADDED:
+     Started interface for player/npc inventory.
+     DRAW_AREA_WIDTH variable in constants to clean code up a bit.
+CHANGED:
+     Fixed the sun and moon and made it simpler.
+NOTES:
+IDEAS:
+     Can we make genMap and genBlocks into one method? [For Simplicity]
+----Cameron Faust----
+
+----REVISIONS FOR 12-22-2011----
+ADDED:
+CHANGED:
+     Improved the sun and moon even further.
+NOTES:
+IDEAS:
+----Cameron Faust----
+
+----REVISIONS FOR 12-22-2011----
+ADDED:
+     Day and Night are now implemented. Should be optimized though. 
+          Maybe use a sine wave to generate the alpha value some how.
+CHANGED:
+NOTES:
+IDEAS:
+----Cameron Faust----
