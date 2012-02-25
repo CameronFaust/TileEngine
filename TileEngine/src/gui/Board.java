@@ -30,13 +30,13 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 	// private Being player;
 	private NewMap newMap;
 	private String action = "";
-	private int radianTracker = 0;
+	//private int radianTracker = 0;
 	/*----End Declarations----*/
 
 	public Board() {
 		// player = new Being();
 		newMap = new NewMap();
-		newPlayer = new NewBeing(newMap.getPlayerSpawn());
+		newPlayer = new NewBeing(newMap.getPlayerSpawn(), newMap.getMap());
 		addKeyListener(this);
 		setFocusable(true);
 		d = new Dimension(400, 400);

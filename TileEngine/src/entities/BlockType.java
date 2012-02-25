@@ -54,6 +54,14 @@ public class BlockType implements BlockImages {
 		}
 	}
 
+	
+	
+	protected boolean isSolid() {
+		return isSolid;
+	}
+
+
+
 	protected void changeType(BlockIDString typeID) {
 		switch (typeID) {
 			case SKY :

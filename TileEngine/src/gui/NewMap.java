@@ -3,18 +3,15 @@ package gui;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Random;
-
 import javax.swing.JPanel;
-
-import com.sun.xml.internal.bind.v2.model.core.ID;
-
 import interfaces.Constants;
-
 import entities.Block;
 import enums.BlockIDString;
 
 public class NewMap implements Constants {
 
+	//TODO Document this shit.
+	
 	// Constants
 	private final int HEIGHT_LIMIT = 11; // Max height will be 1 less
 	private final int DIRT_DEPTH = 2;
@@ -26,27 +23,22 @@ public class NewMap implements Constants {
 										// overall flat-like terrain.
 	private final int NOISE_DETAIL = 0; // Setting this higher will result in
 										// more defined chunks.
-
-	// Objects
+	//Variables/Classes
 	private Block[][] map = new Block[CHUNK_SIZE][CHUNK_SIZE];
-	// Variables
 	private Point playerSpawn;
 
 	public NewMap() {
 		generateMap();
 	}
 	
-	
-
 	public Block[][] getMap() {
 		return map;
 	}
 
-
-
 	public Point getPlayerSpawn() {
 		return playerSpawn;
 	}
+	
 	public void drawMap(Graphics2D g2d, JPanel rootPanel) {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int y = 0; y < NUM_CHUNKS; y++) {
@@ -203,5 +195,4 @@ public class NewMap implements Constants {
 			}
 		}
 	}
-
 }
