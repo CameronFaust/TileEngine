@@ -53,14 +53,10 @@ public class BlockType implements BlockImages {
 				break;
 		}
 	}
-
-	
 	
 	protected boolean isSolid() {
 		return isSolid;
 	}
-
-
 
 	protected void changeType(BlockIDString typeID) {
 		switch (typeID) {
