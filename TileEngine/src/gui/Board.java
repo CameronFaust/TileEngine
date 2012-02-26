@@ -238,7 +238,9 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_W :
+				if(!newPlayer.isAirborne()) {
 				newPlayer.setUp(true);
+				}
 				break;
 			// case KeyEvent.VK_S :
 			// newPlayer.setDown(true);

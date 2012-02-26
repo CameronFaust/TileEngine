@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import javax.swing.JPanel;
 
+import com.sun.org.apache.xml.internal.security.utils.IgnoreAllErrorHandler;
+
 public class NewBeing implements Constants, PlayerImages {
 
 	// Constants
@@ -13,10 +15,8 @@ public class NewBeing implements Constants, PlayerImages {
 	/*--Variables--*/
 	private boolean left, right, up, down, pick;
 	private int x, y, dx, dy;
-	private int chunkX, chunkY;
 	private int xSpeed = 4;
-	private int ySpeed = 8;
-	private int jumpHeight = 6;
+	private int ySpeed = 6;
 	private boolean isAirborne = false;
 	private double frameNumber = 0;
 	private Block[][] currMap;
@@ -40,7 +40,7 @@ public class NewBeing implements Constants, PlayerImages {
 	public void setLeft(boolean left) {
 		if (left == true) {
 			dx = -xSpeed;
-		} else {
+		} else if (!right) {
 			dx = 0;
 		}
 		this.left = left;
@@ -53,7 +53,7 @@ public class NewBeing implements Constants, PlayerImages {
 	public void setRight(boolean right) {
 		if (right == true) {
 			dx = xSpeed;
-		} else {
+		} else if (!left) {
 			dx = 0;
 		}
 		this.right = right;
@@ -88,6 +88,10 @@ public class NewBeing implements Constants, PlayerImages {
 		this.pick = pick;
 	}
 
+	public boolean isAirborne() {
+		return isAirborne;
+	}
+
 	public void draw(Graphics2D g2d, JPanel rootPane, Block[][] map) {
 		frameNumber += PLAYER_FRAME_DELAY;
 		if (((int) frameNumber) > 3 && !left && !right) {
@@ -104,8 +108,7 @@ public class NewBeing implements Constants, PlayerImages {
 		} else { // Standing, jumping, or falling.
 			g2d.drawImage(standImages[(int) frameNumber], x, y, rootPane);
 		}
-		newMove(dx, dy);
-		// move(map);
+		move(dx, dy);
 	}
 	/**
 	 * @return the "x" index in the 2D map array.
@@ -121,106 +124,196 @@ public class NewBeing implements Constants, PlayerImages {
 		return y / TILE_SIZE;
 	}
 
-	// Holy fuck confusing
 	public void newMove(int xMove, int yMove) {
-		// Notes, if the player passes bounds check while dx == positive ySpeed
-		// then isAirborne == true.
 
-		// Are we still moving?
-		if (xMove != 0 || yMove != 0) {
-			// ----MOVING DOWN
+	}
+
+	public void move(int xMove, int yMove) {
+		// Are we moving up or down?
+		if (yMove != 0) {// Move up and down
+			isAirborne = true; // In the air
+			/*----DOWN----*/
 			if (yMove > 0) {
-				if (xMove != 0) { // Moving down and left/right
-
-					if (xMove > 0) { // Down and Left
-						try {
-							if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid
-									|| currMap[getXMapIndex() - 1][getYMapIndex()].isSolid) {
-								yMove = 0;
-							} else { // No Solid
-								// Move towards 0 wheter pos or neg.
-								// ie -27/abs(-27) -1 vs. -27/-27 = 1;
-								xMove -= (xMove / Math.abs(xMove));
-								x += (xMove / Math.abs(xMove));
-								yMove -= (yMove / Math.abs(yMove));
-								y += (yMove / Math.abs(yMove));
-							}
-						} catch (NullPointerException e) {
-							// Hitting left border
-							if (x < 0) {
-								xMove = 0;
-							}
-						}
-					} else if (xMove < 0) { // Down and Right
-
+				// Are we above two blocks?
+				if (x % TILE_SIZE != 0) {
+					// Are either solid?
+					if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid
+							|| currMap[getXMapIndex() + 1][getYMapIndex() + 1].isSolid) {
+						yMove = 0;
+					} else { // Neither are solid
+						y += yMove / Math.abs(yMove);
+						yMove += yMove / Math.abs(yMove);
 					}
-				} else { // Only Down
-					// if the block below is solid STOP
+				} else { // Above only one block.
 					if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid) {
 						yMove = 0;
-					} else { // No Solid
-						// Move towards 0 wheter pos or neg.
-						// ie -27/abs(-27) -1 vs. -27/-27 = 1;
-						yMove -= (yMove / Math.abs(yMove));
-						y += (yMove / Math.abs(yMove));
+					} else { // Block is not solid.
+						y += yMove / Math.abs(yMove);
+						yMove += yMove / Math.abs(yMove);
 					}
 				}
-				// ----MOVING UP
-			} else if (yMove < 0) {
-				if (xMove != 0) {// Moving up and left/right
-
-				} else { // Only up
-					if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid) {
+				/*----UP----*/
+			} else if (yMove < 0) { // Up
+				// Are we below two blocks?
+				if (x % TILE_SIZE != 0) {
+					// Are either solid?
+					if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid
+							|| currMap[getXMapIndex() + 1][getYMapIndex() - 1].isSolid) {
 						yMove = 0;
-					} else { // No Solid
-						// Move towards 0 wheter pos or neg.
-						// ie -27/abs(-27) -1 vs. -27/-27 = 1;
-						yMove -= (yMove / Math.abs(yMove));
-						y += (yMove / Math.abs(yMove));
+					} else { // Neither are solid
+						y += yMove / Math.abs(yMove);
+						yMove -= yMove / Math.abs(yMove);
+					}
+				} else { // below only one block.
+					try {
+						if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid) {
+							yMove = 0;
+						} else { // Block is not solid.
+							y += yMove / Math.abs(yMove);
+							yMove -= yMove / Math.abs(yMove);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
-				// ----MOVING RIGHT ONLY
-			} else if (xMove > 0) {
-				try {
+			}
+		} else { // Landed
+			isAirborne = false; // No longer Airborn
+		}
+		// Moving Left or Right
+		if (xMove != 0) {
+			// Checking left and right border.
+			if (x >= 0 && x <= (CHUNK_SIZE - 1) * TILE_SIZE) {
+				/*----RIGHT----*/
+				if (xMove > 0) {
 					if (currMap[getXMapIndex() + 1][getYMapIndex()].isSolid) {
 						xMove = 0;
-					} else { // No Solid
-						// Move towards 0 wheter pos or neg.
-						// ie -27/abs(-27) -1 vs. -27/-27 = 1;
-						xMove -= (xMove / Math.abs(xMove));
-						x += (xMove / Math.abs(xMove));
+					} else { // Neither are solid
+						x += xMove / Math.abs(xMove);
+						xMove -= xMove / Math.abs(xMove);
 					}
-				} catch (NullPointerException e) {
-					// Handle hitting right border
-					if (y + TILE_SIZE >= CHUNK_SIZE * TILE_SIZE) {
-						xMove = 0;
-					}
-				}
-				// ----MOVING LEFT ONLY
-			} else if (xMove < 0) {
-				try {
+					/*----LEFT----*/
+				} else if (xMove < 0) {
 					if (currMap[getXMapIndex() - 1][getYMapIndex()].isSolid) {
 						xMove = 0;
-					} else { // No Solid
-						// Move towards 0 wheter pos or neg.
-						// ie -27/abs(-27) -1 vs. -27/-27 = 1;
-						xMove -= (xMove / Math.abs(xMove));
-						x += (xMove / Math.abs(xMove));
-					}
-				} catch (NullPointerException e) {
-					// Handle hitting left border
-					if (x <= 0) {
-						xMove = 0;
+					} else { // Neither are solid
+						x += xMove / Math.abs(xMove);
+						xMove -= xMove / Math.abs(xMove);
 					}
 				}
-
-			} else if (xMove == 0 && yMove == 0) { // Are we finished
-				return;
-			} else { // Not done moving call again!
-				newMove(xMove, yMove);
+			} else { // Hitting Border
+				// TODO Implement a new map when walking far right/left
+				xMove = 0; // Stop moving left or right.
 			}
 		}
+		// Are we still moving?
+		if (xMove != 0 || yMove != 0) {
+			move(xMove, yMove);
+		} else {
+			return; // Done Moving.
+		}
 	}
+
+	// // Holy fuck confusing
+	// public void newMove(int xMove, int yMove) {
+	// // Notes, if the player passes bounds check while dx == positive ySpeed
+	// // then isAirborne == true.
+	//
+	// // Are we still moving?
+	// if (xMove != 0 || yMove != 0) {
+	// // ----MOVING DOWN
+	// if (yMove > 0) {
+	// if (xMove != 0) { // Moving down and left/right
+	//
+	// if (xMove > 0) { // Down and Left
+	// try {
+	// if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid
+	// || currMap[getXMapIndex() - 1][getYMapIndex()].isSolid) {
+	// yMove = 0;
+	// } else { // No Solid
+	// // Move towards 0 wheter pos or neg.
+	// // ie -27/abs(-27) -1 vs. -27/-27 = 1;
+	// xMove -= (xMove / Math.abs(xMove));
+	// x += (xMove / Math.abs(xMove));
+	// yMove -= (yMove / Math.abs(yMove));
+	// y += (yMove / Math.abs(yMove));
+	// }
+	// } catch (NullPointerException e) {
+	// // Hitting left border
+	// if (x < 0) {
+	// xMove = 0;
+	// }
+	// }
+	// } else if (xMove < 0) { // Down and Right
+	//
+	// }
+	// } else { // Only Down
+	// // if the block below is solid STOP
+	// if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid) {
+	// yMove = 0;
+	// } else { // No Solid
+	// // Move towards 0 wheter pos or neg.
+	// // ie -27/abs(-27) -1 vs. -27/-27 = 1;
+	// yMove -= (yMove / Math.abs(yMove));
+	// y += (yMove / Math.abs(yMove));
+	// }
+	// }
+	// // ----MOVING UP
+	// } else if (yMove < 0) {
+	// if (xMove != 0) {// Moving up and left/right
+	//
+	// } else { // Only up
+	// if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid) {
+	// yMove = 0;
+	// } else { // No Solid
+	// // Move towards 0 wheter pos or neg.
+	// // ie -27/abs(-27) -1 vs. -27/-27 = 1;
+	// yMove -= (yMove / Math.abs(yMove));
+	// y += (yMove / Math.abs(yMove));
+	// }
+	// }
+	// // ----MOVING RIGHT ONLY
+	// } else if (xMove > 0) {
+	// try {
+	// if (currMap[getXMapIndex() + 1][getYMapIndex()].isSolid) {
+	// xMove = 0;
+	// } else { // No Solid
+	// // Move towards 0 wheter pos or neg.
+	// // ie -27/abs(-27) -1 vs. -27/-27 = 1;
+	// xMove -= (xMove / Math.abs(xMove));
+	// x += (xMove / Math.abs(xMove));
+	// }
+	// } catch (NullPointerException e) {
+	// // Handle hitting right border
+	// if (y + TILE_SIZE >= CHUNK_SIZE * TILE_SIZE) {
+	// xMove = 0;
+	// }
+	// }
+	// // ----MOVING LEFT ONLY
+	// } else if (xMove < 0) {
+	// try {
+	// if (currMap[getXMapIndex() - 1][getYMapIndex()].isSolid) {
+	// xMove = 0;
+	// } else { // No Solid
+	// // Move towards 0 wheter pos or neg.
+	// // ie -27/abs(-27) -1 vs. -27/-27 = 1;
+	// xMove -= (xMove / Math.abs(xMove));
+	// x += (xMove / Math.abs(xMove));
+	// }
+	// } catch (NullPointerException e) {
+	// // Handle hitting left border
+	// if (x <= 0) {
+	// xMove = 0;
+	// }
+	// }
+	//
+	// } else if (xMove == 0 && yMove == 0) { // Are we finished
+	// return;
+	// } else { // Not done moving call again!
+	// newMove(xMove, yMove);
+	// }
+	// }
+	// }
 
 	// public void move(Block[][] map) {
 	// // bounds check

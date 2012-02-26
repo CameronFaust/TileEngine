@@ -14,7 +14,6 @@ public class Game extends JFrame implements Constants {
           add(new Board());
           setTitle("Game");
           setDefaultCloseOperation(EXIT_ON_CLOSE);
-          // I'm not entirely sure why I need to add the extra space. It could be because it takes the size of the -[]X bar and resize bars into account as well.
           setSize(CHUNK_SIZE * TILE_SIZE + CHUNK_SIZE, NUM_CHUNKS * TILE_SIZE + CHUNK_SIZE);
           //setResizable(false);
           setLocationRelativeTo(null);
