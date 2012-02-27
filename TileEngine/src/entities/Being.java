@@ -154,6 +154,8 @@ public class Being implements Constants, PlayerImages {
 	// FIXME the move method kind of works, I feel like the conditions in the
 	// method might be too restrictive. Needs a little tweaking/debugging
 	// shouldnt be TOO much work.
+	// FIX ArrayIndexOutOfBounds for top and bottom of map.
+	// FIX Character gets stuck when hitting left border, handle x == -1
 	public void move(int xMove, int yMove) {
 		// Are we moving up or down?
 		if (yMove != 0) {// Move up and down
@@ -164,14 +166,16 @@ public class Being implements Constants, PlayerImages {
 				if (x % TILE_SIZE != 0) {
 					// Are either solid?
 					if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid
-							|| currMap[getXMapIndex() + 1][getYMapIndex() + 1].isSolid) {
+							|| currMap[getXMapIndex() + 1][getYMapIndex() + 1].isSolid
+							&& getYMapIndex() + 1 <= NUM_CHUNKS) {
 						yMove = 0;
 					} else { // Neither are solid
 						y += yMove / Math.abs(yMove);
 						yMove += yMove / Math.abs(yMove);
 					}
 				} else { // Above only one block.
-					if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid) {
+					if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid
+							&& getYMapIndex() + 1 <= NUM_CHUNKS) {
 						yMove = 0;
 					} else { // Block is not solid.
 						y += yMove / Math.abs(yMove);
@@ -183,12 +187,19 @@ public class Being implements Constants, PlayerImages {
 				// Are we below two blocks?
 				if (x % TILE_SIZE != 0) {
 					// Are either solid?
-					if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid
-							|| currMap[getXMapIndex() + 1][getYMapIndex() - 1].isSolid) {
-						yMove = 0;
-					} else { // Neither are solid
-						y += yMove / Math.abs(yMove);
-						yMove -= yMove / Math.abs(yMove);
+					try {
+						if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid
+								|| currMap[getXMapIndex() + 1][getYMapIndex() - 1].isSolid) {
+							yMove = 0;
+						} else { // Neither are solid
+							y += yMove / Math.abs(yMove);
+							yMove -= yMove / Math.abs(yMove);
+						}
+					} catch (ArrayIndexOutOfBoundsException e) {
+						if(getYMapIndex() - 1 < 0 && y >= 0) {
+							y += yMove / Math.abs(yMove);
+							yMove -= yMove / Math.abs(yMove);
+						}
 					}
 				} else { // below only one block.
 					try {
@@ -198,8 +209,11 @@ public class Being implements Constants, PlayerImages {
 							y += yMove / Math.abs(yMove);
 							yMove -= yMove / Math.abs(yMove);
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
+					} catch (ArrayIndexOutOfBoundsException e) {
+						if(getYMapIndex() - 1 < 0 && y >= 0) {
+							y += yMove / Math.abs(yMove);
+							yMove -= yMove / Math.abs(yMove);
+						}
 					}
 				}
 			}
@@ -212,7 +226,7 @@ public class Being implements Constants, PlayerImages {
 			if (x >= 0 && x <= (CHUNK_SIZE - 1) * TILE_SIZE) {
 				/*----RIGHT----*/
 				if (xMove > 0) {
-					if (getXMapIndex() + 1 <= CHUNK_SIZE
+					if (getXMapIndex() + 1 < CHUNK_SIZE
 							&& currMap[getXMapIndex() + 1][getYMapIndex()].isSolid) {
 						xMove = 0;
 					} else { // Neither are solid
