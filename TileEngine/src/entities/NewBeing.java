@@ -26,6 +26,34 @@ public class NewBeing implements Constants, PlayerImages {
 		this.y = spawnPoint.y * TILE_SIZE;
 		this.currMap = currMap;
 	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
+	
+	public int getDx() {
+		return dx;
+	}
+
+	public int getDy() {
+		return dy;
+	}
+	
+	public int getxSpeed() {
+		return xSpeed;
+	}
+
+	public int getySpeed() {
+		return ySpeed;
+	}
+
+	public double getFrameNumber() {
+		return frameNumber;
+	}
 
 	public void setCurrMap(Block[][] currMap) {
 		this.currMap = currMap;
