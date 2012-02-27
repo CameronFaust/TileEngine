@@ -19,9 +19,9 @@ public class Being implements Constants, PlayerImages {
 	private boolean isHoldingObject = false;
 	private int x, y, dx;
 	private int xSpeed = 4;
-	private int ySpeed = 4;
+	private int ySpeed = 6;
 	private int dy = ySpeed;
-	private int jumpSpeed = -16;
+	private int jumpMulti = 6; // Jump height == jumpMulti * -ySpeed
 	private double frameNumber = 0;
 	private Block[][] currMap;
 	// TODO Held "Object" Dont limit to blocks.
@@ -104,7 +104,7 @@ public class Being implements Constants, PlayerImages {
 
 	public void setUp(boolean up) {
 		if (up == true) {
-			dy = jumpSpeed;
+			dy = jumpMulti * -ySpeed;
 		} else {
 			dy = ySpeed;
 		}
@@ -204,9 +204,9 @@ public class Being implements Constants, PlayerImages {
 	}
 
 	private int jump(int yMove) {
+		setUp(false);
 		// Are we below two blocks?
 		if (x % TILE_SIZE != 0) {
-			setUp(false);
 			// Are either solid?
 			try {
 				if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid
