@@ -24,11 +24,9 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 
 	/*----Declarations----*/
 	private Timer timer;
-	private Dimension d;
-	private Image ii;
+	//private Dimension d;
 	private Being player;
 	private Map map;
-	private String action = "";
 	// private int radianTracker = 0;
 	/*----End Declarations----*/
 
@@ -37,7 +35,7 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 		player = new Being(map.getPlayerSpawn(), map.getMap());
 		addKeyListener(this);
 		setFocusable(true);
-		d = new Dimension(400, 400);
+		//d = new Dimension(400, 400);
 		setDoubleBuffered(true);
 		// This will constantly update the screen and moving variables at the
 		// given rate.
@@ -155,60 +153,6 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 	// // alpha being negative or > 1.
 	// System.out.print(e.getLocalizedMessage() + '\n');
 	// System.out.print("Alpha = " + Float.toString(alpha) + '\n');
-	// }
-	//
-	// // <editor-fold defaultstate="collapsed" desc="Dubugging Stats!">
-	// // Debugging
-	// g2d.setColor(Color.red);
-	// g2d.drawString("Radian Tracker: " + Integer.toString(radianTracker), 150,
-	// DRAW_AREA_WIDTH + 10);
-	// g2d.drawString(
-	// "Radian Tracker * SUN_SPEED: " + Integer.toString(radianTracker *
-	// SUN_SPEED), 150,
-	// DRAW_AREA_WIDTH + 20);
-	// g2d.drawString(
-	// "Radian Tracker * SUN_SPEED / 2: "
-	// + Integer.toString(radianTracker * SUN_SPEED / 2), 150,
-	// DRAW_AREA_WIDTH + 30);
-	// g2d.drawString("Split: " + Integer.toString(split), 150, DRAW_AREA_WIDTH
-	// + 40);
-	// g2d.drawString("Radian: " + Double.toString(radian), 150, DRAW_AREA_WIDTH
-	// + 50);
-	// g2d.drawString("Radian2: " + Double.toString(radian2), 150,
-	// DRAW_AREA_WIDTH + 60);
-	// g2d.drawString("Alpha Rise: " + Float.toString(alpha), 150,
-	// DRAW_AREA_WIDTH + 70);
-	// g2d.setColor(Color.black);
-	// // </editor-fold>
-	// }
-
-	// /**
-	// *
-	// * @param g2d
-	// */
-	// public void drawPlayer(Graphics2D g2d) {
-	// if (player.getBlock() == 0) {
-	// action = "";
-	// } else {
-	// action = "hold";
-	// }
-	// if (player.getLastDir() == 1) {
-	// dispFrame(g2d, "left" + action);
-	// } else if (player.getLastDir() == 2) {
-	// dispFrame(g2d, "right" + action);
-	// }
-	// }
-
-	// public void dispFrame(Graphics2D g2d, String dir) {
-	// g2d.drawImage(map.getImageMap().get("player" + (int) animPos + dir),
-	// player.getPlayerX(), player.getPlayerY(), this);
-	// //g2d.drawImage(map.getImageMap().get("player0up"),
-	// player.getPlayerLocX() * TILE_SIZE, player.getPlayerLocY() * TILE_SIZE,
-	// this);
-	// if (player.getBlock() != 0) { //if the player is holding a block, put it
-	// above his head.
-	// g2d.drawImage(map.getImageMap().get("block" + player.getBlockType()),
-	// player.getPlayerX(), player.getPlayerY() - CHUNK_SIZE, this);
 	// }
 	// }
 
