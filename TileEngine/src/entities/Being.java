@@ -212,27 +212,21 @@ public class Being implements Constants, PlayerImages {
 			if (x >= 0 && x <= (CHUNK_SIZE - 1) * TILE_SIZE) {
 				/*----RIGHT----*/
 				if (xMove > 0) {
-					try {
-						if (currMap[getXMapIndex() + 1][getYMapIndex()].isSolid) {
-							xMove = 0;
-						} else { // Neither are solid
-							x += xMove / Math.abs(xMove);
-							xMove -= xMove / Math.abs(xMove);
-						}
-					} catch (ArrayIndexOutOfBoundsException e) {
-						System.out.print("Caught " + e.getMessage() + " all is good!\n");
+					if (getXMapIndex() + 1 <= CHUNK_SIZE
+							&& currMap[getXMapIndex() + 1][getYMapIndex()].isSolid) {
+						xMove = 0;
+					} else { // Neither are solid
+						x += xMove / Math.abs(xMove);
+						xMove -= xMove / Math.abs(xMove);
 					}
 					/*----LEFT----*/
 				} else if (xMove < 0) {
-					try {
-						if (currMap[getXMapIndex() - 1][getYMapIndex()].isSolid) {
-							xMove = 0;
-						} else { // Neither are solid
-							x += xMove / Math.abs(xMove);
-							xMove -= xMove / Math.abs(xMove);
-						}
-					} catch (ArrayIndexOutOfBoundsException e) {
-						System.out.print("Caught: ArrayIndexOutOfBoundsException(" + e.getMessage() + ") all is good!\n");
+					if (getXMapIndex() - 1 >= 0
+							&& currMap[getXMapIndex() - 1][getYMapIndex()].isSolid) {
+						xMove = 0;
+					} else { // Neither are solid
+						x += xMove / Math.abs(xMove);
+						xMove -= xMove / Math.abs(xMove);
 					}
 				}
 			} else { // Hitting Border
