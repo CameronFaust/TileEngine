@@ -199,6 +199,8 @@ public class Being implements Constants, PlayerImages {
 						if(getYMapIndex() - 1 < 0 && y >= 0) {
 							y += yMove / Math.abs(yMove);
 							yMove -= yMove / Math.abs(yMove);
+						} else {
+							yMove = 0;
 						}
 					}
 				} else { // below only one block.
@@ -213,6 +215,8 @@ public class Being implements Constants, PlayerImages {
 						if(getYMapIndex() - 1 < 0 && y >= 0) {
 							y += yMove / Math.abs(yMove);
 							yMove -= yMove / Math.abs(yMove);
+						} else {
+							yMove = 0;
 						}
 					}
 				}
