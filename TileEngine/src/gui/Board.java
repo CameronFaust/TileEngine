@@ -31,7 +31,7 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 	private String action = "";
 	// private int radianTracker = 0;
 	/*----End Declarations----*/
-	
+
 	public Board() {
 		map = new Map();
 		player = new Being(map.getPlayerSpawn(), map.getMap());
@@ -46,13 +46,15 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 	}
 
 	public void drawStats(Graphics2D g2d) {
-		g2d.drawString("Player:", TILE_SIZE, NUM_CHUNKS * TILE_SIZE); //Header
-		g2d.drawString("X: " + player.getX(), 2 * TILE_SIZE, (NUM_CHUNKS + 1) * TILE_SIZE); // X
-		g2d.drawString("Y: " + player.getY(), 2 * TILE_SIZE, (NUM_CHUNKS + 2) * TILE_SIZE); // Y
-		g2d.drawString("dX: " + player.getDx(), 2 * TILE_SIZE, (NUM_CHUNKS + 3) * TILE_SIZE); // dX
-		g2d.drawString("dY: " + player.getDy(), 2 * TILE_SIZE, (NUM_CHUNKS + 4) * TILE_SIZE); // dY
-		g2d.drawString("Cell X: " + player.getXMapIndex(), 2 * TILE_SIZE, (NUM_CHUNKS + 5) * TILE_SIZE); // cellX
-		g2d.drawString("Cell Y: " + player.getYMapIndex(), 2 * TILE_SIZE, (NUM_CHUNKS + 6) * TILE_SIZE); // cellY
+		g2d.drawString("Player:", TILE_SIZE, (NUM_CHUNKS + 1) * TILE_SIZE); // Header
+		g2d.drawString("X: " + player.getX(), 2 * TILE_SIZE, (NUM_CHUNKS + 2) * TILE_SIZE); // X
+		g2d.drawString("Y: " + player.getY(), 2 * TILE_SIZE, (NUM_CHUNKS + 3) * TILE_SIZE); // Y
+		g2d.drawString("dX: " + player.getDx(), 2 * TILE_SIZE, (NUM_CHUNKS + 4) * TILE_SIZE); // dX
+		g2d.drawString("dY: " + player.getDy(), 2 * TILE_SIZE, (NUM_CHUNKS + 5) * TILE_SIZE); // dY
+		g2d.drawString("Cell X: " + player.getXMapIndex(), 2 * TILE_SIZE, (NUM_CHUNKS + 6)
+				* TILE_SIZE); // cellX
+		g2d.drawString("Cell Y: " + player.getYMapIndex(), 2 * TILE_SIZE, (NUM_CHUNKS + 7)
+				* TILE_SIZE); // cellY
 	}
 
 	// TODO Make this work properly with all sizes of maps ie: squares, and
@@ -233,9 +235,9 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 					player.setUp(true);
 				}
 				break;
-			// case KeyEvent.VK_S :
-			// newPlayer.setDown(true);
-			// break;
+			case KeyEvent.VK_S :
+				player.setDown(true);
+				break;
 			case KeyEvent.VK_A :
 				player.setLeft(true);
 				break;
@@ -254,9 +256,9 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 			case KeyEvent.VK_W :
 				player.setUp(false);
 				break;
-			// case KeyEvent.VK_S :
-			// newPlayer.setDown(false);
-			// break;
+			case KeyEvent.VK_S :
+				player.setDown(false);
+				break;
 			case KeyEvent.VK_A :
 				player.setLeft(false);
 				break;

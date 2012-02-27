@@ -10,6 +10,6 @@ public interface Constants {
      final int NUM_CHUNKS = 32; // "Rows"
      final int DRAW_AREA_WIDTH = CHUNK_SIZE * TILE_SIZE;
      final int REFRESH_RATE = 40;
-     final int SUN_SPEED = 2; //Must be higher than 1
+     //final int SUN_SPEED = 2; //Must be higher than 1
      
 }

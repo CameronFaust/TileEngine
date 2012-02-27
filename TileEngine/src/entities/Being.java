@@ -15,9 +15,11 @@ public class Being implements Constants, PlayerImages {
 	private int x, y, dx, dy;
 	private int xSpeed = 4;
 	private int ySpeed = 4;
+	private int jumpSpeed = -16;
 	private boolean isAirborne = false;
 	private double frameNumber = 0;
 	private Block[][] currMap;
+	private Block heldBlock;
 	/*--End Variables--*/
 
 	// Default Constructor
@@ -91,8 +93,8 @@ public class Being implements Constants, PlayerImages {
 	}
 
 	public void setUp(boolean up) {
-		if (up == true && !isAirborne) {
-			dy = -ySpeed;
+		if (up == true) {
+			dy = jumpSpeed;
 		} else {
 			dy = ySpeed;
 		}
@@ -237,9 +239,13 @@ public class Being implements Constants, PlayerImages {
 					}
 					/*----LEFT----*/
 				} else if (xMove < 0) {
-					if (getXMapIndex() - 1 >= 0
-							&& currMap[getXMapIndex()][getYMapIndex()].isSolid) {
+					if (getXMapIndex() - 1 >= 0 && currMap[getXMapIndex()][getYMapIndex()].isSolid) {
 						xMove = 0;
+						// Fixes bug that allowed player to climb up a block if
+						// pushed up against it.
+						if (x % TILE_SIZE == TILE_SIZE - 1) {
+							x++; // Move player right one pixel
+						}
 					} else { // Neither are solid
 						x += xMove / Math.abs(xMove);
 						xMove -= xMove / Math.abs(xMove);
@@ -254,6 +260,11 @@ public class Being implements Constants, PlayerImages {
 		if (xMove != 0 || yMove != 0) {
 			move(xMove, yMove);
 		} else {
+			// Temporary fix for bug where player would get stuck at
+			// the left border
+			if (x == -1) {
+				x++;
+			}
 			return; // Done Moving.
 		}
 	}
