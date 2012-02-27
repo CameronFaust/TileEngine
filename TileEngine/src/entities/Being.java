@@ -11,12 +11,11 @@ public class Being implements Constants, PlayerImages {
 	// Constants
 	final double PLAYER_FRAME_DELAY = 0.2;
 	/*--Variables--*/
-	private boolean left, right, up, down, pick;
+	private boolean left, right, up, down;
 	private int x, y, dx, dy;
 	private int xSpeed = 4;
 	private int ySpeed = 4;
 	private int jumpSpeed = -16;
-	private boolean isAirborne = false;
 	private double frameNumber = 0;
 	private Block[][] currMap;
 	private Block heldBlock;
@@ -109,16 +108,11 @@ public class Being implements Constants, PlayerImages {
 		this.down = down;
 	}
 
-	public boolean isPick() {
-		return pick;
-	}
-
-	public void setPick(boolean pick) {
-		this.pick = pick;
-	}
-
 	public boolean isAirborne() {
-		return isAirborne;
+		if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid) {
+			return false;
+		}
+		return true;
 	}
 
 	public void draw(Graphics2D g2d, JPanel rootPane, Block[][] map) {
@@ -153,13 +147,57 @@ public class Being implements Constants, PlayerImages {
 		return y / TILE_SIZE;
 	}
 
+	private int jump(int yMove) {
+		// Are we below two blocks?
+		if (x % TILE_SIZE != 0) {
+			// Are either solid?
+			try {
+				if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid
+						|| currMap[getXMapIndex() + 1][getYMapIndex() - 1].isSolid) {
+					yMove = 0;
+				} else { // Neither are solid
+					y += yMove / Math.abs(yMove);
+					yMove -= yMove / Math.abs(yMove);
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				if (getYMapIndex() - 1 < 0 && y >= 0) {
+					y += yMove / Math.abs(yMove);
+					yMove -= yMove / Math.abs(yMove);
+				} else {
+					yMove = 0;
+				}
+			}
+		} else { // below only one block.
+			try {
+				if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid) {
+					yMove = 0;
+				} else { // Block is not solid.
+					y += yMove / Math.abs(yMove);
+					yMove -= yMove / Math.abs(yMove);
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				if (getYMapIndex() - 1 < 0 && y >= 0) {
+					y += yMove / Math.abs(yMove);
+					yMove -= yMove / Math.abs(yMove);
+				} else {
+					yMove = 0;
+				}
+			}
+		}
+		if(yMove != 0) {
+			jump(yMove);
+		} else {
+			return yMove;
+		}
+		return 0;
+	}
+
 	// FIXME Character gets stuck when hitting left border, handle x == -1
 	// FIXME Character on the right side of screen causes
 	// ArrayIndexOOBExceptions
 	public void move(int xMove, int yMove) {
 		// Are we moving up or down?
 		if (yMove != 0) { // Move up and down
-			isAirborne = true; // In the air
 			/*----DOWN----*/
 			if (yMove > 0) {
 				// Are we above two blocks?
@@ -169,7 +207,6 @@ public class Being implements Constants, PlayerImages {
 							|| currMap[getXMapIndex() + 1][getYMapIndex() + 1].isSolid
 							&& getYMapIndex() + 1 <= NUM_CHUNKS) {
 						yMove = 0;
-						isAirborne = false;
 					} else { // Neither are solid
 						y += yMove / Math.abs(yMove);
 						yMove += yMove / Math.abs(yMove);
@@ -177,7 +214,6 @@ public class Being implements Constants, PlayerImages {
 				} else { // Above only one block.
 					if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid
 							&& getYMapIndex() + 1 <= NUM_CHUNKS) {
-						isAirborne = false;
 						yMove = 0;
 					} else { // Block is not solid.
 						y += yMove / Math.abs(yMove);
@@ -186,42 +222,9 @@ public class Being implements Constants, PlayerImages {
 				}
 				/*----UP----*/
 			} else if (yMove < 0) { // Up
-				// Are we below two blocks?
-				if (x % TILE_SIZE != 0) {
-					// Are either solid?
-					try {
-						if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid
-								|| currMap[getXMapIndex() + 1][getYMapIndex() - 1].isSolid) {
-							yMove = 0;
-						} else { // Neither are solid
-							y += yMove / Math.abs(yMove);
-							yMove -= yMove / Math.abs(yMove);
-						}
-					} catch (ArrayIndexOutOfBoundsException e) {
-						if (getYMapIndex() - 1 < 0 && y >= 0) {
-							y += yMove / Math.abs(yMove);
-							yMove -= yMove / Math.abs(yMove);
-						} else {
-							yMove = 0;
-						}
-					}
-				} else { // below only one block.
-					try {
-						if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid) {
-							yMove = 0;
-						} else { // Block is not solid.
-							y += yMove / Math.abs(yMove);
-							yMove -= yMove / Math.abs(yMove);
-						}
-					} catch (ArrayIndexOutOfBoundsException e) {
-						if (getYMapIndex() - 1 < 0 && y >= 0) {
-							y += yMove / Math.abs(yMove);
-							yMove -= yMove / Math.abs(yMove);
-						} else {
-							yMove = 0;
-						}
-					}
-				}
+				yMove = jump(yMove);
+				setUp(false);
+				yMove = 0;
 			}
 		}
 		// Moving Left or Right
