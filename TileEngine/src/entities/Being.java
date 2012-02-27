@@ -6,18 +6,24 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import javax.swing.JPanel;
 
+import enums.BlockIDString;
+
 public class Being implements Constants, PlayerImages {
 
 	// Constants
 	final double PLAYER_FRAME_DELAY = 0.2;
+	// How close does the player need to be to the block?
+	private final int MAX_PICK_DISTANCE = 4;
 	/*--Variables--*/
 	private boolean left, right, up, down;
+	private boolean isHoldingObject = false;
 	private int x, y, dx, dy;
 	private int xSpeed = 4;
 	private int ySpeed = 4;
 	private int jumpSpeed = -16;
 	private double frameNumber = 0;
 	private Block[][] currMap;
+	// TODO Held "Object" Dont limit to blocks.
 	private Block heldBlock;
 	/*--End Variables--*/
 
@@ -124,6 +130,7 @@ public class Being implements Constants, PlayerImages {
 				frameNumber = 0;
 			}
 		}
+		move(dx, dy);
 		if (left) {
 			g2d.drawImage(walkLeftImages[(int) frameNumber], x, y, rootPane);
 		} else if (right) {
@@ -131,8 +138,14 @@ public class Being implements Constants, PlayerImages {
 		} else { // Standing, jumping, or falling.
 			g2d.drawImage(standImages[(int) frameNumber], x, y, rootPane);
 		}
-		move(dx, dy);
+
+		//If we are holding a block draw it.
+		if (isHoldingObject) {
+			//Draw the block above the player
+			g2d.drawImage(heldBlock.img, x, y - TILE_SIZE, rootPane);
+		}
 	}
+
 	/**
 	 * @return the "x" index in the 2D map array.
 	 */
@@ -145,6 +158,34 @@ public class Being implements Constants, PlayerImages {
 	 */
 	public int getYMapIndex() {
 		return y / TILE_SIZE;
+	}
+
+	// TODO Implement things like sand (things that collapse)
+	public void pickUpObject() {
+		if (!isHoldingObject) {
+			if (left) { // Facing Left
+				if (x % TILE_SIZE <= MAX_PICK_DISTANCE) {
+					if (currMap[getXMapIndex() - 1][getYMapIndex()].isPickable) {
+						isHoldingObject = true;
+						// Set the players held block to this block
+						heldBlock = new Block(currMap[getXMapIndex() - 1][getYMapIndex()].getTypeID());
+						// Change the block the player picked to sky.
+						currMap[getXMapIndex() - 1][getYMapIndex()].changeType(BlockIDString.SKY);
+					}
+				}
+			} else if (right) { // Facing Right
+				if ((x + TILE_SIZE) % TILE_SIZE <= TILE_SIZE - MAX_PICK_DISTANCE) {
+					if (currMap[getXMapIndex() + 1][getYMapIndex()].isPickable) {
+						isHoldingObject = true;
+						// Set the players held block to this block
+						heldBlock = new Block(currMap[getXMapIndex() + 1][getYMapIndex()].getTypeID());
+						// Change the block the player picked to sky.
+						currMap[getXMapIndex() + 1][getYMapIndex()].changeType(BlockIDString.SKY);
+					}
+				}
+			}
+		} else if (isHoldingObject){
+		}
 	}
 
 	private int jump(int yMove) {
@@ -184,7 +225,7 @@ public class Being implements Constants, PlayerImages {
 				}
 			}
 		}
-		if(yMove != 0) {
+		if (yMove != 0) {
 			jump(yMove);
 		} else {
 			return yMove;

@@ -245,7 +245,7 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 				player.setRight(true);
 				break;
 			case KeyEvent.VK_SPACE :
-				player.setPick(true);
+				player.pickUpObject();
 				break;
 		}
 	}
@@ -264,9 +264,6 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 				break;
 			case KeyEvent.VK_D :
 				player.setRight(false);
-				break;
-			case KeyEvent.VK_SPACE :
-				player.setPick(false);
 				break;
 		}
 	}

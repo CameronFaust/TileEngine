@@ -27,6 +27,10 @@ public class Block extends BlockType implements Constants {
 		x = rowX * TILE_SIZE; // True X
 		y = colY * TILE_SIZE; // True Y
 	}
+	public Block(BlockIDString typeID) {
+		super(typeID);
+		this.typeID = typeID;
+	}
 
 	public Image getImage() {
 		return super.img;

@@ -15,8 +15,10 @@ import enums.BlockIDString;
  */
 public class BlockType implements BlockImages {
 
+	//TODO Maybe change to object type
+	
 	protected Image img;
-	protected boolean isSolid;
+	protected boolean isSolid, isPickable;
 	protected String typeName;
 
 	public BlockType(BlockIDString typeID) {
@@ -25,37 +27,47 @@ public class BlockType implements BlockImages {
 				typeName = "sky";
 				img = SKY;
 				isSolid = false;
+				isPickable = false;
 				break;
 			case GRASS :
 				typeName = "grass";
 				img = GRASS;
 				isSolid = true;
+				isPickable = true;
 				break;
 			case DIRT :
 				typeName = "dirt";
 				img = DIRT;
 				isSolid = true;
+				isPickable = true;
 				break;
 			case STONE :
 				typeName = "stone";
 				img = STONE;
 				isSolid = true;
+				isPickable = true;
 				break;
 			case DIAMOND :
 				typeName = "diamond";
 				img = DIAMOND;
 				isSolid = true;
+				isPickable = true;
 				break;
 			case BEDROCK :
 				typeName = "bedrock";
 				img = BEDROCK;
 				isSolid = true;
+				isPickable = false;
 				break;
 		}
 	}
 	
 	protected boolean isSolid() {
 		return isSolid;
+	}
+	
+	protected boolean isPickable() {
+		return isPickable;
 	}
 
 	protected void changeType(BlockIDString typeID) {
