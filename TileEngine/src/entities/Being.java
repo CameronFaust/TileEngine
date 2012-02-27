@@ -33,6 +33,10 @@ public class Being implements Constants, PlayerImages {
 		this.y = spawnPoint.y * TILE_SIZE;
 		this.currMap = currMap;
 	}
+	
+	public boolean isHoldingObject() {
+		return isHoldingObject;
+	}
 
 	public int getX() {
 		return x;
@@ -126,7 +130,11 @@ public class Being implements Constants, PlayerImages {
 		if (((int) frameNumber) > 3 && !left && !right) {
 			frameNumber = 0;
 		} else if (left || right) {
-			if (((int) frameNumber) > 4) {
+			if (isHoldingObject) {
+				if ((int) frameNumber > 1) {
+					frameNumber = 0;
+				}
+			} else if (((int) frameNumber) > 4) {
 				frameNumber = 0;
 			}
 		}
@@ -135,13 +143,17 @@ public class Being implements Constants, PlayerImages {
 			g2d.drawImage(walkLeftImages[(int) frameNumber], x, y, rootPane);
 		} else if (right) {
 			g2d.drawImage(walkRightImages[(int) frameNumber], x, y, rootPane);
+		} else if (left && isHoldingObject) {
+			g2d.drawImage(walkLeftHoldImages[(int) frameNumber], x, y, rootPane);
+		} else if (right && isHoldingObject) {
+			g2d.drawImage(walkRightHoldImages[(int) frameNumber], x, y, rootPane);
 		} else { // Standing, jumping, or falling.
 			g2d.drawImage(standImages[(int) frameNumber], x, y, rootPane);
 		}
 
-		//If we are holding a block draw it.
+		// If we are holding a block draw it.
 		if (isHoldingObject) {
-			//Draw the block above the player
+			// Draw the block above the player
 			g2d.drawImage(heldBlock.img, x, y - TILE_SIZE, rootPane);
 		}
 	}
@@ -168,7 +180,8 @@ public class Being implements Constants, PlayerImages {
 					if (currMap[getXMapIndex() - 1][getYMapIndex()].isPickable) {
 						isHoldingObject = true;
 						// Set the players held block to this block
-						heldBlock = new Block(currMap[getXMapIndex() - 1][getYMapIndex()].getTypeID());
+						heldBlock = new Block(
+								currMap[getXMapIndex() - 1][getYMapIndex()].getTypeID());
 						// Change the block the player picked to sky.
 						currMap[getXMapIndex() - 1][getYMapIndex()].changeType(BlockIDString.SKY);
 					}
@@ -178,13 +191,14 @@ public class Being implements Constants, PlayerImages {
 					if (currMap[getXMapIndex() + 1][getYMapIndex()].isPickable) {
 						isHoldingObject = true;
 						// Set the players held block to this block
-						heldBlock = new Block(currMap[getXMapIndex() + 1][getYMapIndex()].getTypeID());
+						heldBlock = new Block(
+								currMap[getXMapIndex() + 1][getYMapIndex()].getTypeID());
 						// Change the block the player picked to sky.
 						currMap[getXMapIndex() + 1][getYMapIndex()].changeType(BlockIDString.SKY);
 					}
 				}
 			}
-		} else if (isHoldingObject){
+		} else if (isHoldingObject) {
 		}
 	}
 
@@ -264,7 +278,7 @@ public class Being implements Constants, PlayerImages {
 				/*----UP----*/
 			} else if (yMove < 0) { // Up
 				yMove = jump(yMove);
-				setUp(false);
+				//setUp(false);
 				yMove = 0;
 			}
 		}

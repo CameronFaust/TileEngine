@@ -55,6 +55,11 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 				* TILE_SIZE); // cellX
 		g2d.drawString("Cell Y: " + player.getYMapIndex(), 2 * TILE_SIZE, (NUM_CHUNKS + 7)
 				* TILE_SIZE); // cellY
+		g2d.drawString("Up: " + player.isUp(), TILE_SIZE * TILE_SIZE, (NUM_CHUNKS + 1) * TILE_SIZE);
+		g2d.drawString("Down: " + player.isDown(), TILE_SIZE * TILE_SIZE, (NUM_CHUNKS + 2) * TILE_SIZE);
+		g2d.drawString("Left: " + player.isLeft(), TILE_SIZE * TILE_SIZE, (NUM_CHUNKS + 3) * TILE_SIZE);
+		g2d.drawString("Right: " + player.isRight(), TILE_SIZE * TILE_SIZE, (NUM_CHUNKS + 4) * TILE_SIZE);
+		g2d.drawString("Is Holding: " + player.isHoldingObject(), TILE_SIZE * TILE_SIZE, (NUM_CHUNKS + 5) * TILE_SIZE);
 	}
 
 	// TODO Make this work properly with all sizes of maps ie: squares, and
