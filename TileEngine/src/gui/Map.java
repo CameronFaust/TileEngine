@@ -8,7 +8,7 @@ import interfaces.Constants;
 import entities.Block;
 import enums.BlockIDString;
 
-public class NewMap implements Constants {
+public class Map implements Constants {
 
 	//TODO Document this shit.
 	
@@ -27,7 +27,7 @@ public class NewMap implements Constants {
 	private Block[][] map = new Block[CHUNK_SIZE][CHUNK_SIZE];
 	private Point playerSpawn;
 
-	public NewMap() {
+	public Map() {
 		generateMap();
 	}
 	

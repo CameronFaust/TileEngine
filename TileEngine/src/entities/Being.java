@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import javax.swing.JPanel;
 
-public class NewBeing implements Constants, PlayerImages {
+public class Being implements Constants, PlayerImages {
 
 	// Constants
 	final double PLAYER_FRAME_DELAY = 0.2;
@@ -21,7 +21,7 @@ public class NewBeing implements Constants, PlayerImages {
 	/*--End Variables--*/
 
 	// Default Constructor
-	public NewBeing(Point spawnPoint, Block[][] currMap) {
+	public Being(Point spawnPoint, Block[][] currMap) {
 		this.x = spawnPoint.x * TILE_SIZE;
 		this.y = spawnPoint.y * TILE_SIZE;
 		this.currMap = currMap;

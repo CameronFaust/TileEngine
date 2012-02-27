@@ -1,6 +1,6 @@
 package gui;
 
-import entities.NewBeing;
+import entities.Being;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,15 +26,15 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 	private Timer timer;
 	private Dimension d;
 	private Image ii;
-	private NewBeing newPlayer;
-	private NewMap newMap;
+	private Being player;
+	private Map map;
 	private String action = "";
 	// private int radianTracker = 0;
 	/*----End Declarations----*/
 	
 	public Board() {
-		newMap = new NewMap();
-		newPlayer = new NewBeing(newMap.getPlayerSpawn(), newMap.getMap());
+		map = new Map();
+		player = new Being(map.getPlayerSpawn(), map.getMap());
 		addKeyListener(this);
 		setFocusable(true);
 		d = new Dimension(400, 400);
@@ -47,12 +47,12 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 
 	public void drawStats(Graphics2D g2d) {
 		g2d.drawString("Player:", TILE_SIZE, NUM_CHUNKS * TILE_SIZE); //Header
-		g2d.drawString("X: " + newPlayer.getX(), 2 * TILE_SIZE, (NUM_CHUNKS + 1) * TILE_SIZE); // X
-		g2d.drawString("Y: " + newPlayer.getY(), 2 * TILE_SIZE, (NUM_CHUNKS + 2) * TILE_SIZE); // Y
-		g2d.drawString("dX: " + newPlayer.getDx(), 2 * TILE_SIZE, (NUM_CHUNKS + 3) * TILE_SIZE); // dX
-		g2d.drawString("dY: " + newPlayer.getDy(), 2 * TILE_SIZE, (NUM_CHUNKS + 4) * TILE_SIZE); // dY
-		g2d.drawString("Cell X: " + newPlayer.getXMapIndex(), 2 * TILE_SIZE, (NUM_CHUNKS + 5) * TILE_SIZE); // cellX
-		g2d.drawString("Cell Y: " + newPlayer.getYMapIndex(), 2 * TILE_SIZE, (NUM_CHUNKS + 6) * TILE_SIZE); // cellY
+		g2d.drawString("X: " + player.getX(), 2 * TILE_SIZE, (NUM_CHUNKS + 1) * TILE_SIZE); // X
+		g2d.drawString("Y: " + player.getY(), 2 * TILE_SIZE, (NUM_CHUNKS + 2) * TILE_SIZE); // Y
+		g2d.drawString("dX: " + player.getDx(), 2 * TILE_SIZE, (NUM_CHUNKS + 3) * TILE_SIZE); // dX
+		g2d.drawString("dY: " + player.getDy(), 2 * TILE_SIZE, (NUM_CHUNKS + 4) * TILE_SIZE); // dY
+		g2d.drawString("Cell X: " + player.getXMapIndex(), 2 * TILE_SIZE, (NUM_CHUNKS + 5) * TILE_SIZE); // cellX
+		g2d.drawString("Cell Y: " + player.getYMapIndex(), 2 * TILE_SIZE, (NUM_CHUNKS + 6) * TILE_SIZE); // cellY
 	}
 
 	// TODO Make this work properly with all sizes of maps ie: squares, and
@@ -206,7 +206,7 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 	// }
 
 	public void PlayGame(Graphics2D g2d) {
-		newPlayer.draw(g2d, this, newMap.getMap());
+		player.draw(g2d, this, map.getMap());
 		// drawSun(g2d);
 		drawStats(g2d);
 		g2d.dispose();
@@ -215,7 +215,7 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 	public void paint(Graphics g) {
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
-		newMap.drawMap(g2d, this); //
+		map.drawMap(g2d, this); //
 		PlayGame(g2d);
 		g2d.dispose();
 		g.dispose();
@@ -229,21 +229,21 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_W :
-				if (!newPlayer.isAirborne()) {
-					newPlayer.setUp(true);
+				if (!player.isAirborne()) {
+					player.setUp(true);
 				}
 				break;
 			// case KeyEvent.VK_S :
 			// newPlayer.setDown(true);
 			// break;
 			case KeyEvent.VK_A :
-				newPlayer.setLeft(true);
+				player.setLeft(true);
 				break;
 			case KeyEvent.VK_D :
-				newPlayer.setRight(true);
+				player.setRight(true);
 				break;
 			case KeyEvent.VK_SPACE :
-				newPlayer.setPick(true);
+				player.setPick(true);
 				break;
 		}
 	}
@@ -252,19 +252,19 @@ public class Board extends JPanel implements ActionListener, KeyListener, Consta
 	public void keyReleased(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_W :
-				newPlayer.setUp(false);
+				player.setUp(false);
 				break;
 			// case KeyEvent.VK_S :
 			// newPlayer.setDown(false);
 			// break;
 			case KeyEvent.VK_A :
-				newPlayer.setLeft(false);
+				player.setLeft(false);
 				break;
 			case KeyEvent.VK_D :
-				newPlayer.setRight(false);
+				player.setRight(false);
 				break;
 			case KeyEvent.VK_SPACE :
-				newPlayer.setPick(false);
+				player.setPick(false);
 				break;
 		}
 	}
