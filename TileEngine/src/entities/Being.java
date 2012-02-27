@@ -17,9 +17,10 @@ public class Being implements Constants, PlayerImages {
 	/*--Variables--*/
 	private boolean left, right, up, down;
 	private boolean isHoldingObject = false;
-	private int x, y, dx, dy;
+	private int x, y, dx;
 	private int xSpeed = 4;
 	private int ySpeed = 4;
+	private int dy = ySpeed;
 	private int jumpSpeed = -16;
 	private double frameNumber = 0;
 	private Block[][] currMap;
@@ -33,7 +34,7 @@ public class Being implements Constants, PlayerImages {
 		this.y = spawnPoint.y * TILE_SIZE;
 		this.currMap = currMap;
 	}
-	
+
 	public boolean isHoldingObject() {
 		return isHoldingObject;
 	}
@@ -139,14 +140,14 @@ public class Being implements Constants, PlayerImages {
 			}
 		}
 		move(dx, dy);
-		if (left) {
-			g2d.drawImage(walkLeftImages[(int) frameNumber], x, y, rootPane);
-		} else if (right) {
-			g2d.drawImage(walkRightImages[(int) frameNumber], x, y, rootPane);
-		} else if (left && isHoldingObject) {
+		if (left && isHoldingObject) {
 			g2d.drawImage(walkLeftHoldImages[(int) frameNumber], x, y, rootPane);
 		} else if (right && isHoldingObject) {
 			g2d.drawImage(walkRightHoldImages[(int) frameNumber], x, y, rootPane);
+		} else if (left) {
+			g2d.drawImage(walkLeftImages[(int) frameNumber], x, y, rootPane);
+		} else if (right) {
+			g2d.drawImage(walkRightImages[(int) frameNumber], x, y, rootPane);
 		} else { // Standing, jumping, or falling.
 			g2d.drawImage(standImages[(int) frameNumber], x, y, rootPane);
 		}
@@ -205,6 +206,7 @@ public class Being implements Constants, PlayerImages {
 	private int jump(int yMove) {
 		// Are we below two blocks?
 		if (x % TILE_SIZE != 0) {
+			setUp(false);
 			// Are either solid?
 			try {
 				if (currMap[getXMapIndex()][getYMapIndex() - 1].isSolid
@@ -264,7 +266,7 @@ public class Being implements Constants, PlayerImages {
 						yMove = 0;
 					} else { // Neither are solid
 						y += yMove / Math.abs(yMove);
-						yMove += yMove / Math.abs(yMove);
+						yMove -= yMove / Math.abs(yMove);
 					}
 				} else { // Above only one block.
 					if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid
@@ -272,13 +274,13 @@ public class Being implements Constants, PlayerImages {
 						yMove = 0;
 					} else { // Block is not solid.
 						y += yMove / Math.abs(yMove);
-						yMove += yMove / Math.abs(yMove);
+						yMove -= yMove / Math.abs(yMove);
 					}
 				}
 				/*----UP----*/
 			} else if (yMove < 0) { // Up
 				yMove = jump(yMove);
-				//setUp(false);
+				// setUp(false);
 				yMove = 0;
 			}
 		}
