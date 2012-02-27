@@ -14,7 +14,7 @@ public class Being implements Constants, PlayerImages {
 	private boolean left, right, up, down, pick;
 	private int x, y, dx, dy;
 	private int xSpeed = 4;
-	private int ySpeed = 6;
+	private int ySpeed = 4;
 	private boolean isAirborne = false;
 	private double frameNumber = 0;
 	private Block[][] currMap;
@@ -91,7 +91,7 @@ public class Being implements Constants, PlayerImages {
 	}
 
 	public void setUp(boolean up) {
-		if (up == true) {
+		if (up == true && !isAirborne) {
 			dy = -ySpeed;
 		} else {
 			dy = ySpeed;
@@ -151,14 +151,12 @@ public class Being implements Constants, PlayerImages {
 		return y / TILE_SIZE;
 	}
 
-	// FIXME the move method kind of works, I feel like the conditions in the
-	// method might be too restrictive. Needs a little tweaking/debugging
-	// shouldnt be TOO much work.
-	// FIX ArrayIndexOutOfBounds for top and bottom of map.
-	// FIX Character gets stuck when hitting left border, handle x == -1
+	// FIXME Character gets stuck when hitting left border, handle x == -1
+	// FIXME Character on the right side of screen causes
+	// ArrayIndexOOBExceptions
 	public void move(int xMove, int yMove) {
 		// Are we moving up or down?
-		if (yMove != 0) {// Move up and down
+		if (yMove != 0) { // Move up and down
 			isAirborne = true; // In the air
 			/*----DOWN----*/
 			if (yMove > 0) {
@@ -169,6 +167,7 @@ public class Being implements Constants, PlayerImages {
 							|| currMap[getXMapIndex() + 1][getYMapIndex() + 1].isSolid
 							&& getYMapIndex() + 1 <= NUM_CHUNKS) {
 						yMove = 0;
+						isAirborne = false;
 					} else { // Neither are solid
 						y += yMove / Math.abs(yMove);
 						yMove += yMove / Math.abs(yMove);
@@ -176,6 +175,7 @@ public class Being implements Constants, PlayerImages {
 				} else { // Above only one block.
 					if (currMap[getXMapIndex()][getYMapIndex() + 1].isSolid
 							&& getYMapIndex() + 1 <= NUM_CHUNKS) {
+						isAirborne = false;
 						yMove = 0;
 					} else { // Block is not solid.
 						y += yMove / Math.abs(yMove);
@@ -196,7 +196,7 @@ public class Being implements Constants, PlayerImages {
 							yMove -= yMove / Math.abs(yMove);
 						}
 					} catch (ArrayIndexOutOfBoundsException e) {
-						if(getYMapIndex() - 1 < 0 && y >= 0) {
+						if (getYMapIndex() - 1 < 0 && y >= 0) {
 							y += yMove / Math.abs(yMove);
 							yMove -= yMove / Math.abs(yMove);
 						} else {
@@ -212,7 +212,7 @@ public class Being implements Constants, PlayerImages {
 							yMove -= yMove / Math.abs(yMove);
 						}
 					} catch (ArrayIndexOutOfBoundsException e) {
-						if(getYMapIndex() - 1 < 0 && y >= 0) {
+						if (getYMapIndex() - 1 < 0 && y >= 0) {
 							y += yMove / Math.abs(yMove);
 							yMove -= yMove / Math.abs(yMove);
 						} else {
@@ -221,8 +221,6 @@ public class Being implements Constants, PlayerImages {
 					}
 				}
 			}
-		} else { // Landed
-			isAirborne = false; // No longer Airborn
 		}
 		// Moving Left or Right
 		if (xMove != 0) {
@@ -240,7 +238,7 @@ public class Being implements Constants, PlayerImages {
 					/*----LEFT----*/
 				} else if (xMove < 0) {
 					if (getXMapIndex() - 1 >= 0
-							&& currMap[getXMapIndex() - 1][getYMapIndex()].isSolid) {
+							&& currMap[getXMapIndex()][getYMapIndex()].isSolid) {
 						xMove = 0;
 					} else { // Neither are solid
 						x += xMove / Math.abs(xMove);
