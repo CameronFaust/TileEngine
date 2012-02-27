@@ -26,15 +26,15 @@ public class Being implements Constants, PlayerImages {
 		this.y = spawnPoint.y * TILE_SIZE;
 		this.currMap = currMap;
 	}
-	
+
 	public int getX() {
 		return x;
 	}
-	
+
 	public int getY() {
 		return y;
 	}
-	
+
 	public int getDx() {
 		return dx;
 	}
@@ -42,7 +42,7 @@ public class Being implements Constants, PlayerImages {
 	public int getDy() {
 		return dy;
 	}
-	
+
 	public int getxSpeed() {
 		return xSpeed;
 	}
@@ -151,7 +151,6 @@ public class Being implements Constants, PlayerImages {
 		return y / TILE_SIZE;
 	}
 
-	// XXX This is the new move method.
 	// FIXME the move method kind of works, I feel like the conditions in the
 	// method might be too restrictive. Needs a little tweaking/debugging
 	// shouldnt be TOO much work.
@@ -213,19 +212,27 @@ public class Being implements Constants, PlayerImages {
 			if (x >= 0 && x <= (CHUNK_SIZE - 1) * TILE_SIZE) {
 				/*----RIGHT----*/
 				if (xMove > 0) {
-					if (currMap[getXMapIndex() + 1][getYMapIndex()].isSolid) {
-						xMove = 0;
-					} else { // Neither are solid
-						x += xMove / Math.abs(xMove);
-						xMove -= xMove / Math.abs(xMove);
+					try {
+						if (currMap[getXMapIndex() + 1][getYMapIndex()].isSolid) {
+							xMove = 0;
+						} else { // Neither are solid
+							x += xMove / Math.abs(xMove);
+							xMove -= xMove / Math.abs(xMove);
+						}
+					} catch (ArrayIndexOutOfBoundsException e) {
+						System.out.print("Caught " + e.getMessage() + " all is good!\n");
 					}
 					/*----LEFT----*/
 				} else if (xMove < 0) {
-					if (currMap[getXMapIndex() - 1][getYMapIndex()].isSolid) {
-						xMove = 0;
-					} else { // Neither are solid
-						x += xMove / Math.abs(xMove);
-						xMove -= xMove / Math.abs(xMove);
+					try {
+						if (currMap[getXMapIndex() - 1][getYMapIndex()].isSolid) {
+							xMove = 0;
+						} else { // Neither are solid
+							x += xMove / Math.abs(xMove);
+							xMove -= xMove / Math.abs(xMove);
+						}
+					} catch (ArrayIndexOutOfBoundsException e) {
+						System.out.print("Caught: ArrayIndexOutOfBoundsException(" + e.getMessage() + ") all is good!\n");
 					}
 				}
 			} else { // Hitting Border
