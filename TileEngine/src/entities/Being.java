@@ -139,6 +139,7 @@ public class Being implements Constants, PlayerImages {
 				frameNumber = 0;
 			}
 		}
+		//FIXME Drawing walkLeftImages doesnt work
 		move(dx, dy);
 		if (left && isHoldingObject) {
 			g2d.drawImage(walkLeftHoldImages[(int) frameNumber], x, y, rootPane);
