@@ -152,7 +152,6 @@ public class Being implements Constants, PlayerImages {
 		} else { // Standing, jumping, or falling.
 			g2d.drawImage(standImages[(int) frameNumber], x, y, rootPane);
 		}
-
 		// If we are holding a block draw it.
 		if (isHoldingObject) {
 			// Draw the block above the player
